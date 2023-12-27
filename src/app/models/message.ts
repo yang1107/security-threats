@@ -1,6 +1,7 @@
 export interface Message {
-  id: string;
+  id: number;
+  used_id: string;
   title: string;
-  body: string;
+  contents: string;
   date: string; // ISO 8601
 }

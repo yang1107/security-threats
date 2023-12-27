@@ -1,10 +1,10 @@
 const express = require('express');
-const fs = require('node:fs');
+const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const PORT = 8080;
 const exec = require('child_process').exec;
 
-app.get('/check-version', (req, res) => {
+app.get('/check-updates', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
   const appVersionFile= req.query.versionFile;
   const command = `cat ${appVersionFile}.txt`;
@@ -17,7 +17,7 @@ app.get('/check-version', (req, res) => {
   });
 });
 
-const messages = [];
+const db = new sqlite3.Database('server.db');
 
 app.get('/messages', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
@@ -28,19 +28,22 @@ app.get('/messages', (req, res) => {
     return;
   }
 
-  const userLines = fs.readFileSync('users.txt', 'utf8')
-    .split('\n');
-
-  let result = [];
-  for (let line of userLines) {
-    const [user, password] = line.split(':');
-    if (user === myUser && password === myPassword) {
-      result = messages.filter(message => message.username === myUser);
-      break;
+  db.get(`SELECT * FROM users WHERE username='${myUser}' AND password='${myPassword}'`, (err, row) => {
+    if (err) {
+      res.status(500).send({error: err});
+    } else if (!row) {
+      res.status(500).send({error: 'user not found'});
+    } else {
+      console.log(row);
+      db.all(`SELECT * FROM messages WHERE user_id='${row.id}'`, (err, rows) => {
+        if (err) {
+          res.status(500).send({error: err});
+        } else {
+          res.send(rows);
+        }
+      });
     }
-  }
-
-  res.send(result);
+  });
 });
 
 app.listen(PORT,()=>console.log(`server started on port ${PORT}`));

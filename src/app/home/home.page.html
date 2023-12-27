@@ -8,12 +8,32 @@
 
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let item of items">
-      <ion-label>{{item.title}}</ion-label>
+    <ion-item>
+      <ion-input [(ngModel)]="username" label="Username"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label>Version: {{version}}</ion-label>
+      <ion-input [(ngModel)]="password" type="password" label="Password"></ion-input>
+    </ion-item>
+
+    <ion-button color="secondary" (click)="login()" expand="block">Get all messages</ion-button>
+
+    <ion-list-header *ngIf="messages.length > 0">
+      <ion-label color="primary">Messages</ion-label>
+    </ion-list-header>
+
+    <ion-item *ngFor="let message of messages">
+      <ion-label>
+        {{message.title}}
+        <p [innerHtml]="message.contents"></p>
+      </ion-label>
+      <ion-note slot="end">
+        {{message.date|date:'medium'}}
+      </ion-note>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-label color="medium">Version: {{version}}</ion-label>
     </ion-item>
   </ion-list>
 </ion-content>
