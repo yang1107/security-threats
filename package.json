@@ -1,13 +1,12 @@
 {
-  "name": "security-threads",
+  "name": "security-threats",
   "version": "0.0.1",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "start-client": "ionic serve",
+    "start-server": "cd server && npm run start-server",
+    "build": "ionic build --prod",
     "test": "ng test",
     "lint": "ng lint"
   },
