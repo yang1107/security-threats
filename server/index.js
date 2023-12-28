@@ -19,7 +19,7 @@ app.get('/check-updates', (req, res) => {
 
 const db = new sqlite3.Database('server.db');
 
-app.get('/messages', (req, res) => {
+app.get('/login', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
   const myUser = req.query.username;
   const myPassword = req.query.password;
@@ -34,14 +34,24 @@ app.get('/messages', (req, res) => {
     } else if (!row) {
       res.status(500).send({error: 'user not found'});
     } else {
-      console.log(row);
-      db.all(`SELECT * FROM messages WHERE user_id='${row.id}'`, (err, rows) => {
-        if (err) {
-          res.status(500).send({error: err});
-        } else {
-          res.send(rows);
-        }
-      });
+      res.send(row);
+    }
+  });
+});
+
+app.get('/messages', (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  const myUser = req.query.userId;
+  if (!myUser) {
+    res.status(500).send({error: 'user id not provided'});
+    return;
+  }
+
+  db.all(`SELECT * FROM messages WHERE user_id='${myUser}'`, (err, rows) => {
+    if (err) {
+      res.status(500).send({error: err});
+    } else {
+      res.send(rows);
     }
   });
 });

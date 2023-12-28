@@ -37,9 +37,26 @@ export class HomePage {
 
   async login() {
     this.messages = [];
-    this.httpClient.get<Message[]>(`http://localhost:8080/messages?username=${this.username}&password=${this.password}`).subscribe({
+    this.httpClient.get<{id: string; username: string; password: string}>(`http://localhost:8080/login?username=${this.username}&password=${this.password}`).subscribe({
       next: result => {
-        this.messages = result;
+        const userId = result.id;
+        if (userId) {
+          this.httpClient.get<Message[]>(`http://localhost:8080/messages?userId=${userId}`).subscribe({
+            next: messages => {
+              this.messages = messages;
+            },
+            error: async () => {
+              const alert = await this.alertController.create({
+                header: 'Error',
+                message: 'Error while getting the messages',
+                buttons: [
+                  {text: 'Continue', role: 'cancel'},
+                ]
+              });
+              await alert.present();
+            }
+          });
+        }
       },
       error: async () => {
         const alert = await this.alertController.create({
