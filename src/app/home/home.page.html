@@ -25,7 +25,7 @@
     <ion-item *ngFor="let message of messages">
       <ion-label>
         {{message.title}}
-        <p [innerHtml]="message.contents"></p>
+        <p [innerHtml]="unsafeHtml(message.contents)"></p>
       </ion-label>
       <ion-note slot="end">
         {{message.date|date:'medium'}}

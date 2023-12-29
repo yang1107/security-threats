@@ -13,6 +13,7 @@ import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {Message} from '../models/message';
 import {HttpClient} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +30,8 @@ export class HomePage {
   protected password: string = '';
 
   constructor(private httpClient: HttpClient,
-              private alertController: AlertController) {
+              private alertController: AlertController,
+              private domSanitizer: DomSanitizer) {
     this.httpClient.get('http://localhost:8080/check-updates?versionFile=v1').subscribe((result: any) =>{
       this.version = result.version;
     });
@@ -69,5 +71,9 @@ export class HomePage {
         await alert.present();
       }
     });
+  }
+
+  unsafeHtml(contents: string) {
+    return this.domSanitizer.bypassSecurityTrustHtml(contents);
   }
 }
