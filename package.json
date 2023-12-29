@@ -4,9 +4,9 @@
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "scripts": {
-    "start-client": "ionic serve",
+    "start-client": "ng run app:serve --host=localhost --port=8100",
     "start-server": "cd server && npm run start-server",
-    "build": "ionic build --prod",
+    "build": "ng run app:build:production",
     "test": "ng test",
     "lint": "ng lint"
   },
