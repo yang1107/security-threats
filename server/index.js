@@ -8,6 +8,7 @@ app.get('/check-updates', (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
   const appVersionFile= req.query.versionFile;
   const command = `cat ${appVersionFile}.txt`;
+  console.log(command);
   exec(command, (err, output) => {
     if (err) {
       res.status(500).send(err);
@@ -27,8 +28,9 @@ app.get('/login', (req, res) => {
     res.status(500).send({error: 'username and password are required'});
     return;
   }
-
-  db.get(`SELECT * FROM users WHERE username='${myUser}' AND password='${myPassword}'`, (err, row) => {
+  const sql = `SELECT * FROM users WHERE username='${myUser}' AND password='${myPassword}'`;
+  console.log(sql);
+  db.get(sql, (err, row) => {
     if (err) {
       res.status(500).send({error: err});
     } else if (!row) {
@@ -47,7 +49,9 @@ app.get('/messages', (req, res) => {
     return;
   }
 
-  db.all(`SELECT * FROM messages WHERE user_id='${myUser}'`, (err, rows) => {
+  const sql = `SELECT * FROM messages WHERE user_id='${myUser}'`;
+  console.log(sql);
+  db.all(sql, (err, rows) => {
     if (err) {
       res.status(500).send({error: err});
     } else {
