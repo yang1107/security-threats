@@ -14,6 +14,7 @@ import {Message} from '../models/message';
 import {HttpClient} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {DomSanitizer} from '@angular/platform-browser';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -32,18 +33,18 @@ export class HomePage {
   constructor(private httpClient: HttpClient,
               private alertController: AlertController,
               private domSanitizer: DomSanitizer) {
-    this.httpClient.get('http://localhost:8080/check-updates?versionFile=v1').subscribe((result: any) =>{
+    this.httpClient.get(`${environment.serviceUrl}/check-updates?versionFile=v1`).subscribe((result: any) =>{
       this.version = result.version;
     });
   }
 
   async login() {
     this.messages = [];
-    this.httpClient.get<{id: string; username: string; password: string}>(`http://localhost:8080/login?username=${this.username}&password=${this.password}`).subscribe({
+    this.httpClient.get<{id: string; username: string; password: string}>(`${environment.serviceUrl}/login?username=${this.username}&password=${this.password}`).subscribe({
       next: result => {
         const userId = result.id;
         if (userId) {
-          this.httpClient.get<Message[]>(`http://localhost:8080/messages?userId=${userId}`).subscribe({
+          this.httpClient.get<Message[]>(`${environment.serviceUrl}/messages?userId=${userId}`).subscribe({
             next: messages => {
               this.messages = messages;
             },
