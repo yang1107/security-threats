@@ -6,3 +6,5 @@ Prerequisites:
 - Linux or macOS
 - Node.js
 - Sqlite3
+
+##installation
